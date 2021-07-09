@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.DriveTank;
+//import frc.robot.commands.DriveTank;
 import frc.robot.commands.ShootCommand;
-import frc.robot.subsystems.DriveTrain;
+//import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ShootSystem;
 
 /**
@@ -26,8 +26,8 @@ public class Robot extends TimedRobot {
 
     private Command m_autonomousCommand;
 
-    private DriveTank driveTank;
-    private DriveTrain driveTrain;
+    //    private DriveTank driveTank;
+//    private DriveTrain driveTrain;
     private OI oi;
     private ShootSystem shootSystem;
     public ShootCommand shootCommand;
@@ -39,10 +39,12 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         this.oi = new OI();
-        this.driveTrain = new DriveTrain(new WPI_TalonSRX(RobotMap.CAN.rightTalon), new WPI_TalonSRX(RobotMap.CAN.leftTalon), new VictorSP(RobotMap.PWM.rightVictor), new VictorSP(RobotMap.PWM.leftVictor));
-        this.driveTank = new DriveTank(this.driveTrain, oi::getRightY, oi::getLeftY);
-        this.shootSystem = new ShootSystem(new WPI_TalonSRX(RobotMap.CAN.shootTalon), new WPI_VictorSPX(RobotMap.PWM.shootVictor));
-        driveTrain.setDefaultCommand(this.driveTank);
+//        this.driveTrain = new DriveTrain(new WPI_TalonSRX(RobotMap.CAN.rightTalon), new WPI_TalonSRX(RobotMap.CAN.leftTalon), new VictorSP(RobotMap.PWM.rightVictor), new VictorSP(RobotMap.PWM.leftVictor));
+//        this.driveTank = new DriveTank(this.driveTrain, oi::getRightY, oi::getLeftY);
+//        this.shootSystem = new ShootSystem(new WPI_TalonSRX(RobotMap.CAN.shootTalon), new WPI_VictorSPX(RobotMap.PWM.shootVictor));
+//        driveTrain.setDefaultCommand(this.driveTank);
+//        ShootCommand shootCommand = new ShootCommand(this.shootSystem);
+//        shootSystem.setDefaultCommand(shootCommand);
     }
 
 

@@ -21,7 +21,7 @@ public class OI {
     }
 
     public OI() {
-        Button shootButton=new JoystickButton(left,1);
+        Button shootButton=new JoystickButton(left,5);
         shootButton.whileHeld(new ShootCommand(new ShootSystem(new WPI_TalonSRX(RobotMap.CAN.shootTalon), new WPI_VictorSPX(RobotMap.PWM.shootVictor))));
     }
 }

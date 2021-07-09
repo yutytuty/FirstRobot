@@ -5,6 +5,8 @@ import frc.robot.subsystems.ShootSystem;
 
 public class ShootCommand extends CommandBase {
     private final ShootSystem shoot;
+    private final double speed = 0.7;
+
 
     public ShootCommand(ShootSystem shoot) {
         this.shoot = shoot;
@@ -14,7 +16,6 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void execute() {
-        final double speed = 0.5;
         this.shoot.on(speed);
     }
 
@@ -22,5 +23,4 @@ public class ShootCommand extends CommandBase {
     public void end(boolean interrupted) {
         this.shoot.off();
     }
-
 }
