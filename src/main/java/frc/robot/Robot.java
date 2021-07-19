@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.spikes2212.dashboard.ChildNamespace;
+import com.spikes2212.dashboard.Namespace;
 import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,16 +30,20 @@ public class Robot extends TimedRobot {
 
     private Command m_autonomousCommand;
 
+    RootNamespace namespace;
+
     private static WPI_TalonSRX shootSystemTalon;
     private static WPI_VictorSPX shootSystemVictor;
 
 
-    private static void setVictorSpeed() {
-        shootSystemVictor.set(0.7);
+    private static void setSpeed() {
+        shootSystemVictor.set(0.5);
+        shootSystemTalon.set(0.5);
     }
 
-    private static void setTalonSpeed() {
-        shootSystemTalon.set(0.7);
+    private static void stop() {
+        shootSystemTalon.stopMotor();
+        shootSystemVictor.stopMotor();
     }
 
     /**
@@ -49,15 +54,17 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         shootSystemTalon = new WPI_TalonSRX(RobotMap.CAN.shootTalon);
         shootSystemVictor = new WPI_VictorSPX(RobotMap.PWM.shootVictor);
-        RootNamespace root = new RootNamespace("root");
-        ChildNamespace shootSystemNameSpace = (ChildNamespace) root.addChild("shootSystemNameSpace");
-        shootSystemNameSpace.putData("Talon", new InstantCommand(Robot::setTalonSpeed).andThen(new InstantCommand(shootSystemTalon::stopMotor)));
-        shootSystemNameSpace.putData("Victor", new InstantCommand(Robot::setVictorSpeed).andThen(new InstantCommand(shootSystemVictor::stopMotor)));
+        namespace = new RootNamespace("Robot");
+        Namespace shootSystemNameSpace = namespace.addChild("ShootSystemNamespace");
+        shootSystemNameSpace.putData("stop", new InstantCommand(Robot::stop));
+        shootSystemNameSpace.putData("Test", new InstantCommand(Robot::setSpeed));
+
     }
 
 
     @Override
     public void robotPeriodic() {
+        namespace.update();
         CommandScheduler.getInstance().run();
     }
 
