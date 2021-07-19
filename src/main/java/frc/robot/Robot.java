@@ -6,14 +6,17 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.spikes2212.dashboard.ChildNamespace;
+import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.GenericShooterCommand;
+import frc.robot.subsystems.GenericShooter;
 //import frc.robot.commands.DriveTank;
-import frc.robot.commands.ShootCommand;
 //import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ShootSystem;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -29,8 +32,19 @@ public class Robot extends TimedRobot {
     //    private DriveTank driveTank;
 //    private DriveTrain driveTrain;
     private OI oi;
-    private ShootSystem shootSystem;
-    public ShootCommand shootCommand;
+    private static GenericShooter shootSystemTalon;
+    private static GenericShooter shootSystemVictor;
+//    private GenericShooterCommand shootCommandVictor;
+//    private GenericShooterCommand shootCommandTalon;
+
+
+    private static void setVictorSpeed() {
+        shootSystemVictor.on(0.7);
+    }
+
+    private static void setTalonSpeed() {
+        shootSystemTalon.on(0.7);
+    }
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -39,6 +53,13 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         this.oi = new OI();
+        shootSystemTalon = new GenericShooter(new WPI_TalonSRX(RobotMap.CAN.shootTalon));
+        shootSystemVictor = new GenericShooter(new WPI_VictorSPX(RobotMap.PWM.shootVictor));
+        RootNamespace root = new RootNamespace("root");
+        ChildNamespace shootSystemNameSpace = (ChildNamespace) root.addChild("shootSystemNameSpace");
+        shootSystemNameSpace.putData("Talon", new InstantCommand(Robot::setTalonSpeed).andThen(new InstantCommand(shootSystemTalon::off)));
+        shootSystemNameSpace.putData("Victor", new InstantCommand(Robot::setVictorSpeed).andThen(new InstantCommand(shootSystemVictor::off)));
+
 //        this.driveTrain = new DriveTrain(new WPI_TalonSRX(RobotMap.CAN.rightTalon), new WPI_TalonSRX(RobotMap.CAN.leftTalon), new VictorSP(RobotMap.PWM.rightVictor), new VictorSP(RobotMap.PWM.leftVictor));
 //        this.driveTank = new DriveTank(this.driveTrain, oi::getRightY, oi::getLeftY);
 //        this.shootSystem = new ShootSystem(new WPI_TalonSRX(RobotMap.CAN.shootTalon), new WPI_VictorSPX(RobotMap.PWM.shootVictor));
