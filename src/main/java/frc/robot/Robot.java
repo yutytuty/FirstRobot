@@ -29,21 +29,16 @@ public class Robot extends TimedRobot {
 
     private Command m_autonomousCommand;
 
-    //    private DriveTank driveTank;
-//    private DriveTrain driveTrain;
-    private OI oi;
-    private static GenericShooter shootSystemTalon;
-    private static GenericShooter shootSystemVictor;
-//    private GenericShooterCommand shootCommandVictor;
-//    private GenericShooterCommand shootCommandTalon;
+    private static WPI_TalonSRX shootSystemTalon;
+    private static WPI_VictorSPX shootSystemVictor;
 
 
     private static void setVictorSpeed() {
-        shootSystemVictor.on(0.7);
+        shootSystemVictor.set(0.7);
     }
 
     private static void setTalonSpeed() {
-        shootSystemTalon.on(0.7);
+        shootSystemTalon.set(0.7);
     }
 
     /**
@@ -52,20 +47,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        this.oi = new OI();
-        shootSystemTalon = new GenericShooter(new WPI_TalonSRX(RobotMap.CAN.shootTalon));
-        shootSystemVictor = new GenericShooter(new WPI_VictorSPX(RobotMap.PWM.shootVictor));
+        shootSystemTalon = new WPI_TalonSRX(RobotMap.CAN.shootTalon);
+        shootSystemVictor = new WPI_VictorSPX(RobotMap.PWM.shootVictor);
         RootNamespace root = new RootNamespace("root");
         ChildNamespace shootSystemNameSpace = (ChildNamespace) root.addChild("shootSystemNameSpace");
-        shootSystemNameSpace.putData("Talon", new InstantCommand(Robot::setTalonSpeed).andThen(new InstantCommand(shootSystemTalon::off)));
-        shootSystemNameSpace.putData("Victor", new InstantCommand(Robot::setVictorSpeed).andThen(new InstantCommand(shootSystemVictor::off)));
-
-//        this.driveTrain = new DriveTrain(new WPI_TalonSRX(RobotMap.CAN.rightTalon), new WPI_TalonSRX(RobotMap.CAN.leftTalon), new VictorSP(RobotMap.PWM.rightVictor), new VictorSP(RobotMap.PWM.leftVictor));
-//        this.driveTank = new DriveTank(this.driveTrain, oi::getRightY, oi::getLeftY);
-//        this.shootSystem = new ShootSystem(new WPI_TalonSRX(RobotMap.CAN.shootTalon), new WPI_VictorSPX(RobotMap.PWM.shootVictor));
-//        driveTrain.setDefaultCommand(this.driveTank);
-//        ShootCommand shootCommand = new ShootCommand(this.shootSystem);
-//        shootSystem.setDefaultCommand(shootCommand);
+        shootSystemNameSpace.putData("Talon", new InstantCommand(Robot::setTalonSpeed).andThen(new InstantCommand(shootSystemTalon::stopMotor)));
+        shootSystemNameSpace.putData("Victor", new InstantCommand(Robot::setVictorSpeed).andThen(new InstantCommand(shootSystemVictor::stopMotor)));
     }
 
 
